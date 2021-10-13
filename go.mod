@@ -20,6 +20,7 @@ require (
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/swaggo/gin-swagger v1.3.2
 	github.com/swaggo/swag v1.7.3
+	github.com/wechatpay-apiv3/wechatpay-go v0.2.8
 	gopkg.in/olahol/melody.v1 v1.0.0-20170518105555-d52139073376
 )
 

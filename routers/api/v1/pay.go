@@ -18,7 +18,7 @@ type PayInfo struct {
 	Attach			string	`json:"attach"`			// 附加数据
 	NotifyUrl		string	`json:"notify_url"`		// 通知地址
 	GoodsTag		string	`json:"goods_tag"`		// 订单优惠标记 有值则优惠，无则不优惠
-	Amount			float32	`json:"amount"`			// 订单金额
+	Amount			int64	`json:"amount"`			// 订单金额
 	Payer			string	`json:"payer"`			// openid
 	Scene       	string	`json:"scene"`			// 用户终端设备号或者ip
 	StoreInfo		string	`json:"store_info"`		// 商户门店id
@@ -97,8 +97,5 @@ func WxAppCloseOrder(c *gin.Context) {
 
 }
 
-// 小程序支付
-func WxPay() {
-	wx.requestPayment
-}
+
 
