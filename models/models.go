@@ -95,6 +95,21 @@ func CheckTable() {
 	} else {
 		DB.AutoMigrate(WXUser{})
 	}
+	if !DB.HasTable("picture") {
+		DB.CreateTable(Picture{})
+	} else {
+		DB.AutoMigrate(Picture{})
+	}
+	if !DB.HasTable("product_group") {
+		DB.CreateTable(ProductGroup{})
+	} else {
+		DB.AutoMigrate(ProductGroup{})
+	}
+	if !DB.HasTable("member") {
+		DB.CreateTable(Member{})
+	} else {
+		DB.AutoMigrate(Member{})
+	}
 }
 
 func CheckError(err error) {

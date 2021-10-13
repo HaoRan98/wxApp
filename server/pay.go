@@ -14,13 +14,28 @@ import (
 	"log"
 	"net/http"
 	"wxApp/pkg/setting"
-	v1 "wxApp/routers/api/v1"
 )
 
 type Pay struct {
 	PrepayID	string	`json:"prepay_id"`
 	Err
 }
+type PayInfo struct {
+	Mchid			string	`json:"mchid"`			// 商户号
+	Description		string	`json:"description"`	// 描述
+	OutTradeNo		string	`json:"out_trade_no"`	// 订单号
+	TransactionId	string	`json:"transaction_id"`	// 微信支付订单号
+	TimeExpire		string	`json:"time_expire"`	// 交易结束时间
+	Attach			string	`json:"attach"`			// 附加数据
+	NotifyUrl		string	`json:"notify_url"`		// 通知地址
+	GoodsTag		string	`json:"goods_tag"`		// 订单优惠标记 有值则优惠，无则不优惠
+	Amount			int64	`json:"amount"`			// 订单金额
+	Payer			string	`json:"payer"`			// openid
+	Scene       	string	`json:"scene"`			// 用户终端设备号或者ip
+	StoreInfo		string	`json:"store_info"`		// 商户门店id
+
+}
+
 
 type OrderInfo struct {
 	Amount 	struct{
@@ -47,7 +62,7 @@ type OrderInfo struct {
 }
 
 // 下单
-func XiaDan(wxXiaDan v1.PayInfo) (*Pay , error) {
+func XiaDan(wxXiaDan PayInfo) (*Pay , error) {
 
 	url := "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi"
 
@@ -99,7 +114,7 @@ func XiaDan(wxXiaDan v1.PayInfo) (*Pay , error) {
 }
 
 // 查询订单
-func QueryOrder(data v1.PayInfo) (*OrderInfo , error) {
+func QueryOrder(data PayInfo) (*OrderInfo , error) {
 
 	var url string
 	c := new(http.Client)
@@ -139,7 +154,7 @@ func QueryOrder(data v1.PayInfo) (*OrderInfo , error) {
 // 关闭订单
 // 1、商户订单支付失败需要生成新单号重新发起支付，要对原订单号调用关单，避免重复支付；
 // 2、系统下单后，用户支付超时，系统退出不再受理，避免用户继续，请调用关单接口。
-func CloseOrder(data v1.PayInfo) (error) {
+func CloseOrder(data PayInfo) (error) {
 	url := "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/%s/close"
 	url = fmt.Sprintf(url,data.OutTradeNo)
 
@@ -159,7 +174,7 @@ func CloseOrder(data v1.PayInfo) (error) {
 }
 
 // 小程序支付
-func WxPay(data v1.PayInfo) {
+func WxPay(data PayInfo) (*jsapi.PrepayWithRequestPaymentResponse , error){
 	// 仅做测试用
 	// 后期需要读取文件
 	var (
@@ -194,6 +209,7 @@ func WxPay(data v1.PayInfo) {
 		log.Println(resp)
 	} else {
 		log.Println(err)
+		return nil ,err
 	}
 
 	svcc := jsapi.JsapiApiService{Client: client}
@@ -220,7 +236,10 @@ func WxPay(data v1.PayInfo) {
 		log.Println(result1)
 	} else {
 		log.Println(err)
+		return nil , err
 	}
+
+	return resp1 , nil
 
 }
 

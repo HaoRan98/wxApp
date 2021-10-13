@@ -9,28 +9,14 @@ import (
 	"wxApp/server"
 )
 
-type PayInfo struct {
-	Mchid			string	`json:"mchid"`			// 商户号
-	Description		string	`json:"description"`	// 描述
-	OutTradeNo		string	`json:"out_trade_no"`	// 订单号
-	TransactionId	string	`json:"transaction_id"`	// 微信支付订单号
-	TimeExpire		string	`json:"time_expire"`	// 交易结束时间
-	Attach			string	`json:"attach"`			// 附加数据
-	NotifyUrl		string	`json:"notify_url"`		// 通知地址
-	GoodsTag		string	`json:"goods_tag"`		// 订单优惠标记 有值则优惠，无则不优惠
-	Amount			int64	`json:"amount"`			// 订单金额
-	Payer			string	`json:"payer"`			// openid
-	Scene       	string	`json:"scene"`			// 用户终端设备号或者ip
-	StoreInfo		string	`json:"store_info"`		// 商户门店id
 
-}
 
 // 下单
 func WxAppXiaDan(c *gin.Context) {
 
 	var (
 		appG = app.Gin{C: c}
-		form PayInfo
+		form server.PayInfo
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
@@ -54,7 +40,7 @@ func WxAppSelectOrder(c *gin.Context) {
 
 	var (
 		appG = app.Gin{C: c}
-		form PayInfo
+		form server.PayInfo
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
@@ -78,7 +64,7 @@ func WxAppCloseOrder(c *gin.Context) {
 
 	var (
 		appG = app.Gin{C: c}
-		form PayInfo
+		form server.PayInfo
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
@@ -94,6 +80,28 @@ func WxAppCloseOrder(c *gin.Context) {
 	}
 
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
+
+}
+
+func WxPay(c *gin.Context)  {
+	var (
+		appG = app.Gin{C: c}
+		form server.PayInfo
+	)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
+		return
+	}
+
+	resp , err := server.WxPay(form)
+	if err != nil {
+		log.Println(err)
+		appG.Response(http.StatusInternalServerError, e.WXPAY_ERROR, nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, resp)
 
 }
 

@@ -43,6 +43,9 @@ var MsgFlags = map[int]string{
 
 
 	QRCODE_GET_ERROR:      		"获取二维码失败",
+
+
+	WXPAY_ERROR:      			"支付失败",
 }
 
 // GetMsg get error information based on Code

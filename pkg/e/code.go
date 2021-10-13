@@ -45,4 +45,6 @@ const (
 
 	QRCODE_GET_ERROR			= 90000
 
+	WXPAY_ERROR					= 100000
+
 )

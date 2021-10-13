@@ -1,6 +1,7 @@
 package v2
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -12,18 +13,20 @@ import (
 )
 
 type Product struct {
-	ID			string		`json:"id"`
-	CategoryID	string		`json:"category_id" gorm:" comment '分类ID';"`
-	Name		string		`json:"name" gorm:" comment '名称';"`
-	Subtitle	string		`json:"subtitle" gorm:" comment '副标题';"`
-	MainImage	string		`json:"main_image" gorm:" comment '主图';"`
-	SubImages	string		`json:"sub_images" gorm:" comment '支付流水号';"`
-	Detail		string		`json:"detail"`
-	Price		float32		`json:"price"`
-	Stock		int			`json:"stock"`
-	Status		string		`json:"status"`
-	CreateTime	time.Time	`json:"create_time"`
-	UpdateTime	time.Time	`json:"update_time"`
+	ID				string		`json:"id"`
+	Goodstype		string		`json:"goodstype"`
+	Name			string		`json:"name" `
+	ShortName		string		`json:"short_name" `
+	PicUrls			[]string	`json:"pic_urls" `
+	Banner			[]string	`json:"banner"`
+	Sold			int			`json:"sold"`
+	Price			int			`json:"price"`
+	MinGroupPrice	int			`json:"min_group_price"`
+	LinePrice		int			`json:"line_price"`
+	CreateTime		time.Time	`json:"create_time"`
+	UpdateTime		time.Time	`json:"update_time"`
+	Type 			string		`json:"type"`
+	SimpleInfo 		string		`json:"simple_info"`
 }
 
 func CreateProduct(c *gin.Context) {
@@ -38,21 +41,38 @@ func CreateProduct(c *gin.Context) {
 		return
 	}
 
-	product := &models.Product{
-		ID:         util.RandomString(30),
-		Name:       form.Name,
-		Subtitle:   form.Subtitle,
-		MainImage:  form.MainImage,
-		SubImages:  form.SubImages,
-		Detail:     form.Detail,
-		Price:      form.Price,
-		Stock:      form.Stock,
-		Status:     "0",
-		CreateTime: time.Time{},
-		UpdateTime: time.Time{},
+	PicUrlsstring , err := json.Marshal(form.PicUrls)
+	if err != nil {
+		log.Println(err)
+		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		return
 	}
 
-	err := models.CreateData(product)
+	binnerstr , err := json.Marshal(form.Banner)
+	if err != nil {
+		log.Println(err)
+		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		return
+	}
+
+	product := models.Product{
+		ID:            util.RandomString(30),
+		Goodstype:     form.Goodstype,
+		Name:          form.Name,
+		ShortName:     form.ShortName,
+		PicUrls:       string(PicUrlsstring),
+		Banner:        string(binnerstr),
+		Sold:          form.Sold,
+		Price:         form.Price,
+		MinGroupPrice: form.MinGroupPrice,
+		LinePrice:     form.LinePrice,
+		CreateTime:    time.Time{},
+		UpdateTime:    time.Time{},
+		Type:          form.Type,
+		SimpleInfo:    form.SimpleInfo,
+	}
+
+	err = models.CreateData(product)
 	if err != nil {
 		log.Println(err)
 		appG.Response(http.StatusInternalServerError, e.PRODUCT_CREATE_ERROR, nil)
@@ -75,17 +95,35 @@ func EditProduct(c *gin.Context) {
 		return
 	}
 
+	picUrlsstring , err := json.Marshal(form.PicUrls)
+	if err != nil {
+		log.Println(err)
+		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		return
+	}
+
+	binnerstr , err := json.Marshal(form.Banner)
+	if err != nil {
+		log.Println(err)
+		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		return
+	}
+
 	product := &models.Product{
-		ID:         util.RandomString(30),
-		Name:       form.Name,
-		Subtitle:   form.Subtitle,
-		MainImage:  form.MainImage,
-		SubImages:  form.SubImages,
-		Detail:     form.Detail,
-		Price:      form.Price,
-		Stock:      form.Stock,
-		Status:     form.Status,
-		UpdateTime: time.Time{},
+		ID:            form.ID,
+		Goodstype:     form.Goodstype,
+		Name:          form.Name,
+		ShortName:     form.ShortName,
+		PicUrls:       string(picUrlsstring),
+		Banner:        string(binnerstr),
+		Sold:          form.Sold,
+		Price:         form.Price,
+		MinGroupPrice: form.MinGroupPrice,
+		LinePrice:     form.LinePrice,
+		CreateTime:    time.Time{},
+		UpdateTime:    time.Time{},
+		Type:          form.Type,
+		SimpleInfo:    form.SimpleInfo,
 	}
 
 	err := models.EditData(product)

@@ -45,7 +45,14 @@ func InitRouter() *gin.Engine {
 	apiv1.Use(jwt.JWT())
 	{
 
-
+		// 下单
+		apiv1.POST("/order/create",v1.WxAppXiaDan)
+		// 查询
+		apiv1.POST("/order/query",v1.WxAppSelectOrder)
+		// 关闭
+		apiv1.POST("/order/close",v1.WxAppCloseOrder)
+		// 支付
+		apiv1.POST("/order/pay",v1.WxPay)
 
 	}
 
@@ -88,6 +95,10 @@ func InitRouter() *gin.Engine {
 		apiv2.POST("/product/list",v2.GetProduct)
 		// 商品详情
 		apiv2.POST("/product/detail",v2.GetProductInfo)
+
+		// 轮播图
+		apiv2.GET("/picture/list",v2.GetSlideshow)
+
 
 
 	}

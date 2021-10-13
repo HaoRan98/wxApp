@@ -5,11 +5,12 @@ import "time"
 // 订单表
 type Order struct {
 	ID			string		`json:"id"`
-	OrderNo		string		`json:"order_no" gorm:" comment '订单号';"`
+	OrderSN		string 		`json:"order_sn"`
 	UserID		string		`json:"user_id" `
-	Payment		float32 	`json:"payment" gorm:" comment '实际付款金额，单位元，保留2位小数';"`
-	PaymentType string		`json:"payment_type" gorm:" comment '支付类型';" `
-	Postage		float32		`json:"postage" gorm:" comment '运费';"`
+	TotalPrice	int 		`json:"total_price"`
+	ExpressType	int 		`json:"express_type"`
+	numbers 	int 		`json:"numbers"`
+	Postage		int			`json:"postage" gorm:" comment '运费';"`
 	Status		string		`json:"status" gorm:" comment '订单状态';"`
 	PaymentTime time.Time	`json:"payment_time" gorm:" comment '支付时间';"`
 	SendTime	time.Time	`json:"send_time" gorm:" comment '发货时间';"`
