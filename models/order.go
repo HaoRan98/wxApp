@@ -25,13 +25,13 @@ type Order struct {
 type OrderItem struct {
 	ID 					string		`json:"id"`
 	UserID				string		`json:"user_id"`
-	OrderNo				int64		`json:"order_no" gorm:" comment '订单号';"`
+	OrderSN				int64		`json:"order_sn" gorm:" comment '订单号';"`
 	ProductID			string		`json:"product_id"`
 	ProductName			string		`json:"product_name"`
 	ProductImage 		string		`json:"product_image"`
-	CurrentUnitPrice	float32		`json:"current_unit_price" gorm:" comment '生成订单的商品单价';"`
+	CurrentUnitPrice	int			`json:"current_unit_price" gorm:" comment '生成订单的商品单价';"`
 	Quantity			int			`json:"quantity" gorm:" comment '商品数量';"`
-	TotalPrice  		float32		`json:"total_price" gorm:" comment '商品总价';"`
+	TotalPrice  		int			`json:"total_price" gorm:" comment '商品总价';"`
 	CreateTime			time.Time	`json:"create_time"`
 	UpdateTime			time.Time	`json:"update_time"`
 }

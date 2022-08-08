@@ -126,7 +126,7 @@ func EditProduct(c *gin.Context) {
 		SimpleInfo:    form.SimpleInfo,
 	}
 
-	err := models.EditData(product)
+	err = models.EditData(product)
 	if err != nil {
 		log.Println(err)
 		appG.Response(http.StatusInternalServerError, e.PRODUCT_EDIT_ERROR, nil)

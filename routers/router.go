@@ -44,7 +44,6 @@ func InitRouter() *gin.Engine {
 	// 微信端
 	apiv1.Use(jwt.JWT())
 	{
-
 		// 下单
 		apiv1.POST("/order/create",v1.WxAppXiaDan)
 		// 查询
@@ -53,7 +52,6 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/order/close",v1.WxAppCloseOrder)
 		// 支付
 		apiv1.POST("/order/pay",v1.WxPay)
-
 	}
 
 	apiv2 := r.Group("/api/v2")
@@ -98,8 +96,6 @@ func InitRouter() *gin.Engine {
 
 		// 轮播图
 		apiv2.GET("/picture/list",v2.GetSlideshow)
-
-
 
 	}
 
